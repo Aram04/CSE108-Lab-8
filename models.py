@@ -12,8 +12,9 @@ class User(db.Model):
     enrollments = db.relationship("Enrollment", back_populates="student")
     courses_taught = db.relationship("Course", back_populates="teacher")
 
+    # use method='pbkdf2:sha256'
     def set_password(self, pw):
-        self.password_hash = generate_password_hash(pw)
+        self.password_hash = generate_password_hash(pw, method='pbkdf2:sha256')
 
     def check_password(self, pw):
         return check_password_hash(self.password_hash, pw)
