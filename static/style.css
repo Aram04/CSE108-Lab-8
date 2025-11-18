@@ -1,67 +1,143 @@
+/* ===== Global Page Setup ===== */
 body {
-  background-color: #2b2b2b;
   font-family: Arial, sans-serif;
-  padding: 40px;
+  background: #f4f4f8;
+  margin: 0;
+  padding: 20px;
+  color: #333;
 }
 
-input {
-  width: auto;
-  padding: 10px;
-  margin-top: 10px;
+/* ===== Page Titles ===== */
+h1, h2 {
+  color: #222;
+  font-weight: 600;
 }
 
-button {
-  margin-top: 15px;
-  width: 100%;
-  padding: 10px;
-}
-
+/* ===== Login Box ===== */
 .login-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 30px;
-  background: #1c1c1c;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-}
-
-.input-group label {
-  width: 100px;
-  text-align: right;
-  padding-right: 15px;
-  color: white;
-}
-
-.input-group input {
-  flex-grow: 1;
-  padding: 10px;
-  background: #333;
-  border: 1px solid #555;
-  color: white;
-}
-
-.login-button {
-  width: 100%;
-  padding: 15px;
-  background: #555;
-  border: none;
-  cursor: pointer;
-  color: white;
-  font-size: 16px;
-  margin-top: 10px;
+  width: 320px;
+  margin: 80px auto;
+  padding: 25px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .login-title {
   text-align: center;
-  color: white;
   margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background: #4a67ff;
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.login-button:hover {
+  background: #354edb;
+}
+
+/* ===== Dashboard Lists ===== */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background: white;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+ul li a {
+  text-decoration: none;
+  color: #2a45d3;
+  font-weight: bold;
+}
+
+ul li a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Buttons ===== */
+button {
+  padding: 8px 12px;
+  border: none;
+  background: #4a67ff;
+  color: white;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #354edb;
+}
+
+/* ===== Tables ===== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+table th, table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+table th {
+  background: #f0f0f7;
+  font-weight: bold;
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Input inside table */
+table input[type="text"] {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 60px;
+}
+
+/* ===== Container spacing ===== */
+.container {
+  max-width: 900px;
+  margin: auto;
 }

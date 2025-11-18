@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+</head>
+<body>
+
+<h1>Student Dashboard</h1>
+
+<h2>Available Courses</h2>
+<ul>
+    {% for c in courses %}
+        <li>
+            {{ c.name }} —
+            Teacher: {{ c.teacher.username if c.teacher else "None" }} —
+            {{ c.time }}
+            <a href="/enroll/{{ c.id }}">Enroll</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>My Enrollments</h2>
+<ul>
+    {% for e in my_enrollments %}
+        <li>
+            {{ e.course.name }} —
+            Teacher: {{ e.course.teacher.username if e.course.teacher else "None" }} —
+            Grade: {{ e.grade }}
+        </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
+

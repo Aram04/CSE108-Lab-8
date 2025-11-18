@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ course.name }}</title>
+</head>
+<body>
+
+<h1>{{ course.name }} — Student List</h1>
+
+<p><strong>Time:</strong> {{ course.time }}</p>
+<p><strong>Total Enrolled:</strong> {{ enrollments|length }}</p>
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Student</th>
+        <th>Current Grade</th>
+        <th>Update Grade</th>
+    </tr>
+
+    {% for e in enrollments %}
+    <tr>
+        <td>{{ e.student.username }}</td>
+        <td>{{ e.grade }}</td>
+        <td>
+            <form method="POST" action="/teacher/grade/{{ e.id }}">
+                <input type="text" name="grade" value="{{ e.grade }}" size="5">
+                <button type="submit">Save</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

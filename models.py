@@ -19,6 +19,10 @@ class User(db.Model):
     def check_password(self, pw):
         return check_password_hash(self.password_hash, pw)
 
+    # This makes teacher1 show correctly in dropdown
+    def __str__(self):
+        return self.username
+
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,6 +35,10 @@ class Course(db.Model):
 
     enrollments = db.relationship("Enrollment", back_populates="course")
 
+    # For debugging and admin display
+    def __str__(self):
+        return self.name
+
 
 class Enrollment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,3 +48,7 @@ class Enrollment(db.Model):
 
     student = db.relationship("User", back_populates="enrollments")
     course = db.relationship("Course", back_populates="enrollments")
+
+    # Shows nice text instead of <Enrollment X>
+    def __str__(self):
+        return f"{self.student.username} enrolled in {self.course.name}"

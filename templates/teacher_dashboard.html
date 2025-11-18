@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+</head>
+<body>
+
+<h1>Teacher Dashboard</h1>
+<h2>Your Courses</h2>
+
+<ul>
+{% for c in courses %}
+    <li>
+        <a href="/teacher/course/{{ c.id }}">
+            {{ c.name }}
+        </a>
+        — {{ c.time }}
+        — {{ c.enrollments|length }} enrolled
+    </li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
+
+
