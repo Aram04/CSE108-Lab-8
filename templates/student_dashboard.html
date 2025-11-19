@@ -58,6 +58,7 @@
                                 Time: {{ c.time }}
                             </p>
                             
+                            <!-- Display seats -->
                             <p class="text-sm text-gray-500 mb-4">
                                 Seats: <span class="font-semibold {% if c.cur_students >= c.max_students %}text-red-500{% else %}text-green-600{% endif %}">
                                     {{ c.cur_students }} / {{ c.max_students }}
@@ -65,7 +66,8 @@
                             </p>
                         </div>
                         
-                        <form method="GET" action="/enroll/{{ c.id }}" class="mt-4">
+                        <!-- Enrollment Form (Changed from GET to POST) -->
+                        <form method="POST" action="/enroll/{{ c.id }}" class="mt-4">
                             <button type="submit" 
                                     class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                 Enroll
@@ -107,6 +109,7 @@
                             </div>
                         </div>
                         
+                        <!-- Unenrollment Form (Already correct: POST) -->
                         <form method="POST" action="/enroll/{{ e.course_id }}" class="ml-4 flex-shrink-0">
                             <button type="submit" 
                                     class="py-2 px-4 bg-red-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
