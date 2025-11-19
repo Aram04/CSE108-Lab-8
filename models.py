@@ -18,6 +18,7 @@ class User(db.Model):
     def check_password(self, pw):
         return check_password_hash(self.password_hash, pw)
 
+
     # This makes teacher1 show correctly in dropdown
     def __str__(self):
         return self.username

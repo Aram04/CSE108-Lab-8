@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from extensions import db
+from sqlalchemy import event
+from werkzeug.security import generate_password_hash
 
 # App Setup 
 app = Flask(__name__)
@@ -46,12 +48,26 @@ class AdminCourseView(AdminOnlyView):
             "page_size": 10
         }
     }
+class AdminUserView(AdminOnlyView):
+    # Columns to display in the list page
+    column_list = ["username", "user_type", "password_hash"]
+
+    # Fields allowed in the create/edit form
+    form_columns = ["username", "user_type", "password_hash", "courses_taught", "enrollments"]
+
+
+@event.listens_for(User.password_hash, 'set', retval=True)
+#hacky fix to hash passwords upon creation
+def hash_user_password(target, value, oldvalue, initiator):
+    if value != oldvalue:
+        return generate_password_hash(value, method='pbkdf2:sha256')
+    return value
 
 # Flask-Admin Setup 
 admin = Admin(app, name='Admin Dashboard')#, template_mode='bootstrap4')
 #template_mode option does not work on tim's ver of flask-admin
 
-admin.add_view(AdminOnlyView(User, db.session))
+admin.add_view(AdminUserView(User, db.session))
 admin.add_view(AdminCourseView(Course, db.session))       # <-- teacher dropdown works now
 admin.add_view(AdminOnlyView(Enrollment, db.session))
 
