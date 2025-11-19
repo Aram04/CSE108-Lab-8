@@ -20,7 +20,11 @@ db.init_app(app)
 with app.app_context():
     from models import User, Course, Enrollment
     db.create_all()
-    #admin1 = User(username="admin1",realname="john
+    #admin1 = User(username="admin1",realname="john administrator",
+    #              password_hash=generate_password_hash("pass",method='pbkdf2:sha256'),
+    #              user_type="admin")
+    #db.session.add(admin1)
+    #db.session.commit()
 
 #  Admin-Only Access
 class AdminOnlyView(ModelView):
@@ -50,10 +54,10 @@ class AdminCourseView(AdminOnlyView):
     }
 class AdminUserView(AdminOnlyView):
     # Columns to display in the list page
-    column_list = ["username", "user_type", "password_hash"]
+    column_list = ["username", "realname", "user_type", "password_hash"]
 
     # Fields allowed in the create/edit form
-    form_columns = ["username", "user_type", "password_hash", "courses_taught", "enrollments"]
+    form_columns = ["username", "realname", "user_type", "password_hash", "courses_taught", "enrollments"]
 
 
 @event.listens_for(User.password_hash, 'set', retval=True)
@@ -126,9 +130,12 @@ def student_dashboard():
 
     courses = Course.query.all()
     my_enrollments = Enrollment.query.filter_by(student_id=g.user.id).all()
-    #x = 0
-    #for x in courses:
-    #    Enrollment.query.filter_by(course_id=x.id)
+    for i in courses:
+        x = 0#increment for each student found
+        for j in i.enrollments:
+            x += 1
+        i.cur_students = x#at end of loop modify cur_students
+        db.session.commit()
 
     for i in my_enrollments:#remove courses we're in
         courses.remove(Course.query.get(i.course_id))
@@ -142,7 +149,7 @@ def student_dashboard():
 
 
 # Enroll in a course
-@app.route("/enroll/<int:course_id>", methods=['GET','DELETE'])
+@app.route("/enroll/<int:course_id>", methods=['GET','POST'])
 def enroll(course_id):
     if not g.user or g.user.user_type != "student":
         return redirect("/login")
@@ -152,13 +159,15 @@ def enroll(course_id):
         course_id=course_id
     ).first()
 
+    course = Course.query.get(course_id)
+
     #NOT WORKING YET can't delete records
-    if(request.method == 'DELETE'):
+    if(request.method == 'POST'):
         db.session.delete(exists)
         db.session.commit()
 
     if(request.method == 'GET'):
-        if exists:
+        if exists or course.cur_students >= course.max_students:
             return redirect("/student")
 
         new_enroll = Enrollment(student_id=g.user.id, course_id=course_id, grade="N/A")

@@ -12,9 +12,12 @@
     {% for c in courses %}
         <li>
             {{ c.name }} —
-            Teacher: {{ c.teacher.username if c.teacher else "None" }} —
-            {{ c.time }}
-            <a href="/enroll/{{ c.id }}">Enroll</a>
+            Teacher: {{ c.teacher.realname if c.teacher else "None" }} —
+            {{ c.time }} —
+            {{ c.cur_students }} / {{ c.max_students }}
+            <form method="GET" action="/enroll/{{ c.id }}">
+                <button type="submit">Enroll</button>
+            </form>
         </li>
     {% endfor %}
 </ul>
@@ -24,9 +27,10 @@
     {% for e in my_enrollments %}
         <li>
             {{ e.course.name }} —
-            Teacher: {{ e.course.teacher.username if e.course.teacher else "None" }} —
-            Grade: {{ e.grade }}
-            <form method="DELETE" action="/enroll/{{ e.course_id }}">
+            Teacher: {{ e.course.teacher.realname if e.course.teacher else "None" }} —
+            Grade: {{ e.grade }} —
+            {{ e.course.cur_students }} / {{ e.course.max_students }}
+            <form method="POST" action="/enroll/{{ e.course_id }}">
                 <button type="submit">Unenroll</button>
             </form>
         </li>

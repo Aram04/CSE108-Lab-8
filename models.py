@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
-    #realname = db.Column(db.String(64), unique=False, nullable=False)
+    realname = db.Column(db.String(64), unique=False, nullable=False)
     password_hash = db.Column(db.String(128))
     user_type = db.Column(db.String(16))  # student / teacher / admin
 
@@ -21,13 +21,14 @@ class User(db.Model):
 
     # This makes teacher1 show correctly in dropdown
     def __str__(self):
-        return self.username
+        return self.realname
 
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     max_students = db.Column(db.Integer)
+    cur_students = db.Column(db.Integer)
     time = db.Column(db.String(32))
 
     teacher_id = db.Column(db.Integer, db.ForeignKey("user.id"))
