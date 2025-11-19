@@ -26,6 +26,9 @@
             {{ e.course.name }} —
             Teacher: {{ e.course.teacher.username if e.course.teacher else "None" }} —
             Grade: {{ e.grade }}
+            <form method="DELETE" action="/enroll/{{ e.course_id }}">
+                <button type="submit">Unenroll</button>
+            </form>
         </li>
     {% endfor %}
 </ul>

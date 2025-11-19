@@ -2,22 +2,23 @@ from flask import Flask, render_template, request, redirect, session, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from extensions import db
 
 # App Setup 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # replace later
 
-
 # Database Config 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///lab8.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
 # Import models after db initialization
-from models import User, Course, Enrollment
-
-
+with app.app_context():
+    from models import User, Course, Enrollment
+    db.create_all()
+    #admin1 = User(username="admin1",realname="john
 
 #  Admin-Only Access
 class AdminOnlyView(ModelView):
@@ -47,7 +48,8 @@ class AdminCourseView(AdminOnlyView):
     }
 
 # Flask-Admin Setup 
-admin = Admin(app, name='Admin Dashboard', template_mode='bootstrap4')
+admin = Admin(app, name='Admin Dashboard')#, template_mode='bootstrap4')
+#template_mode option does not work on tim's ver of flask-admin
 
 admin.add_view(AdminOnlyView(User, db.session))
 admin.add_view(AdminCourseView(Course, db.session))       # <-- teacher dropdown works now
@@ -108,6 +110,13 @@ def student_dashboard():
 
     courses = Course.query.all()
     my_enrollments = Enrollment.query.filter_by(student_id=g.user.id).all()
+    #x = 0
+    #for x in courses:
+    #    Enrollment.query.filter_by(course_id=x.id)
+
+    for i in my_enrollments:#remove courses we're in
+        courses.remove(Course.query.get(i.course_id))
+
 
     return render_template(
         "student_dashboard.html",
@@ -117,7 +126,7 @@ def student_dashboard():
 
 
 # Enroll in a course
-@app.route("/enroll/<int:course_id>")
+@app.route("/enroll/<int:course_id>", methods=['GET','DELETE'])
 def enroll(course_id):
     if not g.user or g.user.user_type != "student":
         return redirect("/login")
@@ -127,12 +136,18 @@ def enroll(course_id):
         course_id=course_id
     ).first()
 
-    if exists:
-        return redirect("/student")
+    #NOT WORKING YET can't delete records
+    if(request.method == 'DELETE'):
+        db.session.delete(exists)
+        db.session.commit()
 
-    new_enroll = Enrollment(student_id=g.user.id, course_id=course_id, grade="N/A")
-    db.session.add(new_enroll)
-    db.session.commit()
+    if(request.method == 'GET'):
+        if exists:
+            return redirect("/student")
+
+        new_enroll = Enrollment(student_id=g.user.id, course_id=course_id, grade="N/A")
+        db.session.add(new_enroll)
+        db.session.commit()
 
     return redirect("/student")
 

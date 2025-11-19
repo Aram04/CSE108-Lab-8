@@ -1,11 +1,10 @@
-from flask_sqlalchemy import SQLAlchemy
+from extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from app import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
+    #realname = db.Column(db.String(64), unique=False, nullable=False)
     password_hash = db.Column(db.String(128))
     user_type = db.Column(db.String(16))  # student / teacher / admin
 

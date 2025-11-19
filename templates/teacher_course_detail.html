@@ -19,7 +19,7 @@
 
     {% for e in enrollments %}
     <tr>
-        <td>{{ e.student.username }}</td>
+        <td>{{ e.student.username}}</td>
         <td>{{ e.grade }}</td>
         <td>
             <form method="POST" action="/teacher/grade/{{ e.id }}">
