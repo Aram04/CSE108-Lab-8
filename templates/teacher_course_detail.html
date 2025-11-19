@@ -1,35 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{{ course.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.name }} — Student List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply Inter font and clean background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9;
+        }
+        /* Style for inputs and buttons to match the aesthetic */
+        .styled-input {
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .styled-input:focus {
+            border-color: #4f46e5; /* indigo-600 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5); /* ring-indigo-500 */
+            outline: none;
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen p-8">
 
-<h1>{{ course.name }} — Student List</h1>
+<div class="max-w-4xl mx-auto">
 
-<p><strong>Time:</strong> {{ course.time }}</p>
-<p><strong>Total Enrolled:</strong> {{ enrollments|length }}</p>
+    <!-- Header Section -->
+    <header class="mb-8 p-6 bg-white rounded-xl shadow-lg border-b-4 border-indigo-500 flex justify-between items-center">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800">
+            {{ course.name }} — Student List
+        </h1>
+        <a href="/teacher" 
+           class="py-2 px-4 text-sm font-medium text-white bg-indigo-500 rounded-lg shadow-md 
+                  hover:bg-indigo-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 
+                  focus:ring-indigo-500 focus:ring-offset-2">
+            &larr; Back to Dashboard
+        </a>
+    </header>
 
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Student</th>
-        <th>Current Grade</th>
-        <th>Update Grade</th>
-    </tr>
+    <!-- Course Information -->
+    <div class="bg-white p-6 rounded-xl shadow-md mb-8 space-y-2">
+        <p class="text-lg text-gray-700 font-semibold">
+            Time: <span class="font-normal text-indigo-700">{{ course.time }}</span>
+        </p>
+        <p class="text-lg text-gray-700 font-semibold">
+            Total Enrolled: <span class="font-bold text-teal-600">{{ enrollments|length }} students</span>
+        </p>
+    </div>
 
-    {% for e in enrollments %}
-    <tr>
-        <td>{{ e.student.realname }}</td>
-        <td>{{ e.grade }}</td>
-        <td>
-            <form method="POST" action="/teacher/grade/{{ e.id }}">
-                <input type="text" name="grade" value="{{ e.grade }}" size="5">
-                <button type="submit">Save</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+    <!-- Student Table -->
+    <section>
+        {% if enrollments %}
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-indigo-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider">
+                                Student
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-32">
+                                Current Grade
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-40">
+                                Update Grade
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for e in enrollments %}
+                        <tr class="hover:bg-gray-50 transition duration-100">
+                            <!-- Student Name -->
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ e.student.realname }}
+                            </td>
+                            
+                            <!-- Current Grade -->
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-teal-600">
+                                {{ e.grade }}
+                            </td>
+                            
+                            <!-- Update Grade Form -->
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <form method="POST" action="/teacher/grade/{{ e.id }}" class="flex items-center space-x-2">
+                                    <input type="text" 
+                                           name="grade" 
+                                           value="{{ e.grade }}" 
+                                           class="styled-input w-20 text-center"
+                                           placeholder="Grade"
+                                           maxlength="4">
+                                    <button type="submit" 
+                                            class="flex-shrink-0 py-1.5 px-3 bg-indigo-600 text-white text-xs font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 ease-in-out">
+                                        Save
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 p-4 bg-white rounded-lg shadow-sm border-l-4 border-yellow-400">
+                This course currently has no enrolled students.
+            </p>
+        {% endif %}
+    </section>
+
+</div>
 
 </body>
 </html>
