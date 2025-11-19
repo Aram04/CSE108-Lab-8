@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom styles for the Inter font and a smooth background */
@@ -25,15 +24,20 @@
 <body class="min-h-screen p-8">
 
 <div class="max-w-6xl mx-auto">
-    <header class="mb-10 p-6 bg-white rounded-xl shadow-lg border-b-4 border-indigo-500">
+    <header class="mb-10 p-6 bg-white rounded-xl shadow-lg border-b-4 border-indigo-500 flex justify-between items-center">
+        
         <h1 class="text-4xl font-extrabold text-gray-800">
             Student Dashboard
         </h1>
-        <!-- Assuming you have a base.html with a user session, but keeping navigation simple here -->
-        <!-- <p class="text-gray-500 mt-2">Welcome back, student!</p> -->
+
+        <a href="/logout" 
+           class="py-2 px-4 text-sm font-medium text-white bg-red-500 rounded-lg shadow-md 
+                  hover:bg-red-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 
+                  focus:ring-red-500 focus:ring-offset-2">
+            Logout
+        </a>
     </header>
 
-    <!-- Available Courses Section -->
     <section class="mb-12">
         <h2 class="text-2xl font-semibold text-indigo-700 mb-6 border-b pb-2">
             Available Courses
@@ -61,7 +65,6 @@
                             </p>
                         </div>
                         
-                        <!-- Enrollment Form -->
                         <form method="GET" action="/enroll/{{ c.id }}" class="mt-4">
                             <button type="submit" 
                                     class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -76,7 +79,6 @@
         {% endif %}
     </section>
 
-    <!-- My Enrollments Section -->
     <section>
         <h2 class="text-2xl font-semibold text-indigo-700 mb-6 border-b pb-2">
             My Enrollments
@@ -105,10 +107,6 @@
                             </div>
                         </div>
                         
-                        <!-- Unenroll Form -->
-                        <!-- NOTE: The action uses 'enroll/{{ e.course_id }}' and the button text is 'Unenroll' based on your provided logic, 
-                             but Flask typically requires a different route for dropping (like /drop/{{ enrollment_id }}) for clarity. 
-                             I'm keeping your original action but changing the method to POST for safer submission. -->
                         <form method="POST" action="/enroll/{{ e.course_id }}" class="ml-4 flex-shrink-0">
                             <button type="submit" 
                                     class="py-2 px-4 bg-red-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">

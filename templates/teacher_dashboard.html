@@ -2,25 +2,72 @@
 <html>
 <head>
     <title>Teacher Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define the main indigo color for consistent branding */
+        .indigo-brand {
+            color: #4f46e5; /* Tailwind indigo-600 */
+        }
+        /* Define a background to match the admin/student dashboards */
+        body {
+            background-color: #f8fafc; /* Very light gray */
+        }
+    </style>
 </head>
-<body>
+<body class="p-6">
 
-<h1>Teacher Dashboard</h1>
-<h2>Your Courses</h2>
+    <div class="max-w-4xl mx-auto mb-8 flex justify-between items-center">
+        
+        <h1 class="text-3xl font-bold text-gray-800 border-b-4 border-indigo-500 pb-2 inline-block">
+            Teacher Dashboard
+        </h1>
 
-<ul>
-{% for c in courses %}
-    <li>
-        <a href="/teacher/course/{{ c.id }}">
-            {{ c.name }}
+        <a href="/logout" 
+           class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg shadow-md 
+                  hover:bg-red-600 transition duration-150 focus:outline-none focus:ring-2 
+                  focus:ring-red-500 focus:ring-opacity-50">
+            Logout
         </a>
-        — {{ c.time }}
-        — {{ c.enrollments|length }} enrolled
-    </li>
-{% endfor %}
-</ul>
+    </div>
+
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+        <h2 class="text-xl font-semibold indigo-brand mb-4 border-b pb-2">Your Courses</h2>
+
+        <div class="space-y-4">
+            {% for c in courses %}
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition duration-200">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-grow">
+                            <a href="/teacher/course/{{ c.id }}" class="text-lg font-bold text-indigo-700 hover:text-indigo-900 transition duration-150">
+                                {{ c.name }}
+                            </a>
+                            <div class="text-sm text-gray-600 mt-1">
+                                <span class="mr-3">⏰ {{ c.time }}</span>
+                                <span class="font-medium text-gray-500">
+                                    🧑‍🎓 {{ c.enrollments|length }} enrolled
+                                </span>
+                            </div>
+                        </div>
+                        
+                        {% set enrollment_count = c.enrollments|length %}
+                        <div class="ml-4 px-3 py-1 text-xs font-semibold rounded-full 
+                                    {% if enrollment_count == 0 %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% else %}
+                                        bg-indigo-100 text-indigo-800
+                                    {% endif %}
+                                    ">
+                            {{ enrollment_count }} Students
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if not courses %}
+                <p class="text-gray-500 italic p-4 text-center">You are not currently assigned to any courses.</p>
+            {% endif %}
+        </div>
+    </div>
 
 </body>
 </html>
-
-
