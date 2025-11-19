@@ -19,6 +19,12 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        /* Custom style for the disabled button state */
+        .disabled-button {
+            cursor: not-allowed;
+            opacity: 0.6;
+            filter: grayscale(10%);
+        }
     </style>
 </head>
 <body class="min-h-screen p-8">
@@ -46,7 +52,9 @@
         {% if courses %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for c in courses %}
-                    <div class="bg-white p-6 rounded-xl shadow-md dashboard-card flex flex-col justify-between">
+                    {% set is_full = c.cur_students >= c.max_students %}
+                    <div class="bg-white p-6 rounded-xl shadow-md dashboard-card flex flex-col justify-between border-l-4 
+                                {% if is_full %}border-red-500{% else %}border-indigo-500{% endif %}">
                         <div>
                             <h3 class="text-xl font-bold text-gray-900 mb-1">{{ c.name }}</h3>
                             
@@ -58,21 +66,28 @@
                                 Time: {{ c.time }}
                             </p>
                             
-                            <!-- Display seats -->
                             <p class="text-sm text-gray-500 mb-4">
-                                Seats: <span class="font-semibold {% if c.cur_students >= c.max_students %}text-red-500{% else %}text-green-600{% endif %}">
+                                Seats: <span class="font-semibold {% if is_full %}text-red-500{% else %}text-green-600{% endif %}">
                                     {{ c.cur_students }} / {{ c.max_students }}
                                 </span>
                             </p>
                         </div>
                         
-                        <!-- Enrollment Form (Changed from GET to POST) -->
-                        <form method="POST" action="/enroll/{{ c.id }}" class="mt-4">
-                            <button type="submit" 
-                                    class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Enroll
-                            </button>
-                        </form>
+                        <!-- Enrollment Logic: Show button or warning -->
+                        {% if is_full %}
+                            <div class="mt-4 p-2 bg-red-100 text-red-700 font-semibold text-center rounded-lg shadow-inner">
+                                Course is Full!
+                            </div>
+                        {% else %}
+                            <form method="POST" action="/enroll/{{ c.id }}" class="mt-4">
+                                <button type="submit" 
+                                        class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md 
+                                               hover:bg-indigo-700 transition duration-150 ease-in-out focus:outline-none 
+                                               focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    Enroll
+                                </button>
+                            </form>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -109,7 +124,6 @@
                             </div>
                         </div>
                         
-                        <!-- Unenrollment Form (Already correct: POST) -->
                         <form method="POST" action="/enroll/{{ e.course_id }}" class="ml-4 flex-shrink-0">
                             <button type="submit" 
                                     class="py-2 px-4 bg-red-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
